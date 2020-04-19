@@ -18,6 +18,14 @@ public class User {
         this.city = city;
     }
 
+    public User( String name, String username, String password, String surname, City city) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.surname = surname;
+        this.city = city;
+    }
+
     public Integer getUserId() {
         return userId;
     }

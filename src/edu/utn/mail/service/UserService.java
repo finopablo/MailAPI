@@ -2,6 +2,7 @@ package edu.utn.mail.service;
 
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.User;
+import edu.utn.mail.exceptions.UserAlreadyExistsException;
 import edu.utn.mail.exceptions.UserNotexistException;
 
 import java.util.Optional;
@@ -17,5 +18,9 @@ public class UserService {
     public User login(String username, String password) throws UserNotexistException {
         User user = dao.getByUsername(username, password);
         return Optional.ofNullable(user).orElseThrow(() -> new UserNotexistException());
+    }
+
+    public User createUser(User user) throws UserAlreadyExistsException {
+        return dao.add(user);
     }
 }

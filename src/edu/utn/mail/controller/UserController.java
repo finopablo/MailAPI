@@ -1,6 +1,7 @@
 package edu.utn.mail.controller;
 
 import edu.utn.mail.domain.User;
+import edu.utn.mail.exceptions.UserAlreadyExistsException;
 import edu.utn.mail.exceptions.UserNotexistException;
 import edu.utn.mail.exceptions.ValidationException;
 import edu.utn.mail.service.UserService;
@@ -18,6 +19,9 @@ public class UserController {
         } else {
             throw new ValidationException();
         }
+    }
 
+    public User createUser(User user) throws UserAlreadyExistsException {
+        return userService.createUser(user);
     }
 }
