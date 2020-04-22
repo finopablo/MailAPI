@@ -40,4 +40,20 @@ public class City {
     public void setCountry(Country country) {
         this.country = country;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        return this.cityId != ((City) o).getCityId();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return cityId.hashCode();
+    }
 }
