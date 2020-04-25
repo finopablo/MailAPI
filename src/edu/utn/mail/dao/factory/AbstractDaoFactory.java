@@ -1,7 +1,9 @@
 package edu.utn.mail.dao.factory;
 
+import edu.utn.mail.dao.MessageDao;
 import edu.utn.mail.dao.UserDao;
 
+import java.sql.SQLException;
 import java.util.Properties;
 
 public abstract class AbstractDaoFactory {
@@ -12,4 +14,5 @@ public abstract class AbstractDaoFactory {
         this.config = config;
     }
     public abstract UserDao getUserDao() ;
+    public abstract MessageDao getMessageDao();
 }

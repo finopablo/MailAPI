@@ -45,18 +45,18 @@ public class UserMemoryDao implements UserDao {
     }
 
     @Override
-    public User update(User value) {
+    public Integer update(User value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void remove(Integer id) {
-
+    public Integer remove(Integer id) {
+        return 0;
     }
 
     @Override
-    public void remove(User value) {
-
+    public Integer remove(User value) {
+        return 0;
     }
 
     @Override

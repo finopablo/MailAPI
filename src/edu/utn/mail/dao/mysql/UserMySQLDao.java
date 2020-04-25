@@ -6,8 +6,10 @@ import edu.utn.mail.domain.City;
 import edu.utn.mail.domain.Country;
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
+import org.omg.SendingContext.RunTime;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static edu.utn.mail.dao.mysql.MySQLUtils.*;
@@ -40,9 +42,8 @@ public class UserMySQLDao implements UserDao {
     }
 
     private User createUser(ResultSet rs) throws SQLException {
-        User u;
-        u =  new User(rs.getInt("id_user"), rs.getString("name"), rs.getString("pwd"),
-                    rs.getString("surname"), rs.getString("username"), new City(rs.getInt("id_city"),
+        User u = new User(rs.getInt("id_user"), rs.getString("name"), rs.getString("pwd"),
+                rs.getString("surname"), rs.getString("username"), new City(rs.getInt("id_city"),
                 rs.getString("city_name"), new Country(rs.getInt("id_country"), rs.getString("country_name"))));
         return u;
     }
@@ -67,40 +68,83 @@ public class UserMySQLDao implements UserDao {
                 value.setUserId(rs.getInt(1));
             }
         } catch (SQLException e) {
-           if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) { //Parametrizar
-               throw new UserAlreadyExistsException();
-           } else {
-               throw new RuntimeException("Error al agregar el usuario", e);
-           }
+            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) { //Parametrizar
+                throw new UserAlreadyExistsException();
+            } else {
+                throw new RuntimeException("Error al agregar el usuario", e);
+            }
         }
         return value;
     }
 
     @Override
-    public User update(User value) {
-        return null;
+    public Integer update(User value) {
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(UPDATE_USER_QUERY);
+            ps.setString(1, value.getName());
+            ps.setString(2, value.getSurname());
+            ps.setInt(3, value.getCity().getCityId());
+            ps.setString(4, value.getPassword());
+            return ps.executeUpdate();
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Error al modificar usuario", sqlException);
+        }
+
     }
 
     @Override
-    public void remove(Integer id) {
+    public Integer remove(Integer id) {
 
+        try {
+            PreparedStatement ps = connection.prepareStatement(REMOVE_USER_QUERY);
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al eliminar usuario", e);
+        }
     }
 
     @Override
-    public void remove(User value) {
-        throw new UnsupportedOperationException();
+    public Integer remove(User value) {
+        return remove(value.getUserId());
     }
 
     @Override
     public User getById(Integer id) {
-        return null;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(GET_BY_ID_USER_QUERY);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            User user = null;
+            if (rs.next()) {
+                user = createUser(rs);
+            }
+            rs.close();
+            ps.close();
+            return user;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener datos de usuario", e);
+        }
+
     }
 
     @Override
     public List<User> getAll() {
-        return null;
-    }
 
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(BASE_USER_QUERY);
+            List<User> userList = new ArrayList<>();
+            while (rs.next()) {
+                userList.add(createUser(rs));
+            }
+            return userList;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener la lista de usuarios", e);
+        }
+    }
 
 
 }

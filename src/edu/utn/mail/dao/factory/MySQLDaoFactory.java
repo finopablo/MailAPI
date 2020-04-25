@@ -1,6 +1,8 @@
 package edu.utn.mail.dao.factory;
 
+import edu.utn.mail.dao.MessageDao;
 import edu.utn.mail.dao.UserDao;
+import edu.utn.mail.dao.mysql.MessageMySQLDao;
 import edu.utn.mail.dao.mysql.UserMySQLDao;
 
 import java.sql.Connection;
@@ -10,34 +12,47 @@ import java.util.Properties;
 
 public class MySQLDaoFactory extends AbstractDaoFactory {
 
+
+
+    static Connection connection;
+
+
     static UserMySQLDao userMySQLDao;
+    static MessageMySQLDao messageMySQLDao;
 
     public MySQLDaoFactory(Properties config) {
         super(config);
     }
 
-    public UserDao getUserDao() {
+
+    private  Connection getConnection() {
+
         try {
-            if (userMySQLDao == null) {
-                Class.forName("com.mysql.jdbc.Driver").newInstance();
+            if (connection == null) {
+                Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
                 String username = config.getProperty("db.user");
                 String password = config.getProperty("db.password");
                 String db = config.getProperty("db.name");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost/" + db + "?user=" + username + "&password=" + password + "");
+            }
+            return connection;
+        } catch(Exception e) {
+            throw new RuntimeException("Imposible conectar a la base de datos MYSQL", e);
+        }
+    }
 
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/"+db+"?user="+username+"&password="+ password+"");
-                userMySQLDao = new UserMySQLDao(conn);
+    public UserDao getUserDao() {
+            if (userMySQLDao == null) {
+                userMySQLDao = new UserMySQLDao(getConnection());
             }
             return userMySQLDao;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    }
+
+    public MessageDao getMessageDao() {
+        if (messageMySQLDao == null) {
+            messageMySQLDao = new MessageMySQLDao(getConnection(), getUserDao());
         }
-        return null;
+        return messageMySQLDao;
     }
 
 }

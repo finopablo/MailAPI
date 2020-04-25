@@ -1,5 +1,5 @@
 package edu.utn.mail.exceptions;
 
-public class UserNotexistException extends Throwable {
+public class UserNotexistException extends Exception {
 
 }

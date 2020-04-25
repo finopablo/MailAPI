@@ -10,4 +10,5 @@ public interface UserDao extends AbstractDao<User> {
     User getByUsername(String username, String password);
     List<User> getByCity(City city);
     User add(User u) throws UserAlreadyExistsException;
+    Integer update(User u);
 }

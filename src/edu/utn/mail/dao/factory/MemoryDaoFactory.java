@@ -1,5 +1,6 @@
 package edu.utn.mail.dao.factory;
 
+import edu.utn.mail.dao.MessageDao;
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.dao.memory.UserMemoryDao;
 
@@ -13,5 +14,10 @@ public class MemoryDaoFactory extends AbstractDaoFactory {
 
     public UserDao getUserDao() {
         return new UserMemoryDao();
+    }
+
+    @Override
+    public MessageDao getMessageDao() {
+        throw new UnsupportedOperationException();
     }
 }

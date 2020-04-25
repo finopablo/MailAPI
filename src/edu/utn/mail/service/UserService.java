@@ -23,4 +23,19 @@ public class UserService {
     public User createUser(User user) throws UserAlreadyExistsException {
         return dao.add(user);
     }
+
+    
+    public void removeUser(User user) throws UserNotexistException {
+        if (dao.remove(user) == 0) {
+            throw new UserNotexistException();
+        }
+    }
+
+    public User updateUser(User user) throws UserNotexistException {
+        if (dao.update(user) > 0) {
+            return user;
+        } else {
+            throw new UserNotexistException();
+        }
+    }
 }

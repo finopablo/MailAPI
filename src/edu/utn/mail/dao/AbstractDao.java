@@ -8,11 +8,11 @@ public interface AbstractDao<T> {
 
     T add(T value) throws RecordExistsException;
 
-    T update(T value);
+    Integer update(T value);
 
-    void remove(Integer id);
+    Integer remove(Integer id);
 
-    void remove(T value);
+    Integer remove(T value);
 
     T getById(Integer id);
 

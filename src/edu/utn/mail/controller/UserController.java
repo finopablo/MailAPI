@@ -6,6 +6,8 @@ import edu.utn.mail.exceptions.UserNotexistException;
 import edu.utn.mail.exceptions.ValidationException;
 import edu.utn.mail.service.UserService;
 
+import java.util.List;
+
 public class UserController {
     UserService userService;
 
@@ -23,5 +25,14 @@ public class UserController {
 
     public User createUser(User user) throws UserAlreadyExistsException {
         return userService.createUser(user);
+    }
+
+    public void removeUser(User user) throws UserNotexistException {
+        userService.removeUser(user);
+    }
+
+
+    public void updateUser(User user) throws UserNotexistException {
+        userService.updateUser(user);
     }
 }
