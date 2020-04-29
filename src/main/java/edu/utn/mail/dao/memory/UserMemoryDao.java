@@ -4,7 +4,6 @@ import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.City;
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
