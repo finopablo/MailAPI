@@ -23,6 +23,12 @@ public class UserController {
         }
     }
 
+
+    public User getUserById(Integer userId) {
+        return userService.getUser(userId);
+    }
+
+
     public User createUser(User user) throws UserAlreadyExistsException {
         return userService.createUser(user);
     }

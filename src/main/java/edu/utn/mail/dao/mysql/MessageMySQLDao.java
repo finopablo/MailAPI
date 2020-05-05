@@ -4,6 +4,7 @@ import edu.utn.mail.dao.MessageDao;
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.Message;
 import edu.utn.mail.exceptions.RecordExistsException;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,8 +22,9 @@ public class MessageMySQLDao implements MessageDao {
 
     UserDao userDao;
 
-    public MessageMySQLDao(Connection con, UserDao userDao) {
-        this.connection = con;
+
+    public MessageMySQLDao(DriverManagerDataSource dataSource, UserDao userDao) throws SQLException {
+        this.connection = dataSource.getConnection();
         this.userDao = userDao;
     }
 

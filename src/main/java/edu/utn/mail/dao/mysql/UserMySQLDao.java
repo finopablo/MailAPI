@@ -1,12 +1,16 @@
 package edu.utn.mail.dao.mysql;
 
 import com.mysql.cj.exceptions.MysqlErrorNumbers;
-import edu.utn.mail.cache.CacheFactory;
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.City;
 import edu.utn.mail.domain.Country;
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
+
+import net.sf.ehcache.CacheManager;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,11 +20,12 @@ import static edu.utn.mail.dao.mysql.MySQLUtils.*;
 
 public class UserMySQLDao implements UserDao {
 
-    Connection connection;
+    private final Cache cache;
+    final Connection connection;
 
-
-    public UserMySQLDao(Connection connection) {
-        this.connection = connection;
+    public UserMySQLDao(DriverManagerDataSource dataSource, EhCacheCacheManager cacheManager) throws SQLException {
+        this.connection = dataSource.getConnection();
+        this.cache = cacheManager.getCache("userCache");
     }
 
     @Override
@@ -121,7 +126,7 @@ public class UserMySQLDao implements UserDao {
     @Override
     public User getById(Integer id) {
         User user = getFromCache(id);
-        if (user!=null) return user;
+        if (user != null) return user;
         try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_USER_QUERY);
             ps.setInt(1, id);
@@ -154,18 +159,13 @@ public class UserMySQLDao implements UserDao {
             throw new RuntimeException("Error al obtener la lista de usuarios", e);
         }
     }
-
     private void addToCache(User u) {
-        CacheFactory.getUserCache().put(u.getUserId(), u);
+        cache.put(u.getUserId(), u);
     }
-
     private User getFromCache(Integer userId) {
-        return CacheFactory.getUserCache().get(userId);
+        return (User) cache.get(userId, User.class);
     }
-
     private void removeFromCache(Integer userId) {
-        CacheFactory.getUserCache().remove(userId);
+        cache.evict(userId);
     }
-
-
 }

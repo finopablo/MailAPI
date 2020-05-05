@@ -38,4 +38,8 @@ public class UserService {
             throw new UserNotexistException();
         }
     }
+
+    public User getUser(Integer userId){
+        return dao.getById(userId);
+    }
 }

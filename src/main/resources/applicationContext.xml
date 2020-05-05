@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- *******************************
+     ***** CACHE CONFIGURATION *****
+     ******************************* -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache"/>
+    </bean>
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="shared" value="true"/>
+    </bean>
+
+    <context:property-placeholder location="classpath:app.properties"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="jdbc:mysql://${db.host}:${db.port}/${db.name}"/>
+        <property name="username" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
+
+
+    <bean id="userDao" class="edu.utn.mail.dao.mysql.UserMySQLDao">
+        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="cacheManager"/>
+    </bean>
+
+    <bean id="messageDao" class="edu.utn.mail.dao.mysql.MessageMySQLDao">
+        <constructor-arg index="0" ref="dataSource"/>
+        <constructor-arg index="1" ref="userDao"/>
+    </bean>
+
+    <bean id="userService" class="edu.utn.mail.service.UserService">
+        <constructor-arg index="0" ref="userDao"/>
+    </bean>
+
+    <bean id="messageService" class="edu.utn.mail.service.MessageService">
+        <constructor-arg index="0" ref="messageDao"/>
+    </bean>
+
+    <bean id="userController" class="edu.utn.mail.controller.UserController">
+        <constructor-arg index="0" ref="userService"/>
+    </bean>
+
+    <bean id="messageController" class="edu.utn.mail.controller.MessageController">
+        <constructor-arg index="0" ref="messageService"/>
+    </bean>
+</beans>
