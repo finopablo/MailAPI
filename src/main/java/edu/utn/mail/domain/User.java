@@ -1,5 +1,7 @@
 package edu.utn.mail.domain;
 
+import java.util.Objects;
+
 public class User {
 
     Integer userId;
@@ -72,6 +74,24 @@ public class User {
 
     public void setCity(City city) {
         this.city = city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(surname, user.surname) &&
+                Objects.equals(city, user.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, name, username, password, surname, city);
     }
 
     @Override

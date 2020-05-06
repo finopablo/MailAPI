@@ -33,16 +33,10 @@ public class Main {
         Properties config = new Properties();
         config.load(new FileInputStream("./conf/app.properties"));
         AbstractDaoFactory daoFactory =  (AbstractDaoFactory) Class.forName(config.getProperty("db.dao.factory")).getDeclaredConstructor(Properties.class).newInstance(config);
-
-
         MessageDao messageDao = daoFactory.getMessageDao();
         MessageService messageService = new MessageService(messageDao);
         MessageController messageController = new MessageController(messageService);
-
-
         List<Message> messageList = messageController.getMessages(1);
-
-
         UserDao userDao = daoFactory.getUserDao();
         UserService userService = new UserService(userDao);
         UserController userController = new UserController(userService);

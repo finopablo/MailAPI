@@ -1,7 +1,6 @@
 package edu.utn.mail.dao.mysql;
 
 import com.mysql.cj.exceptions.MysqlErrorNumbers;
-import edu.utn.mail.cache.CacheFactory;
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.City;
 import edu.utn.mail.domain.Country;
@@ -17,7 +16,6 @@ import static edu.utn.mail.dao.mysql.MySQLUtils.*;
 public class UserMySQLDao implements UserDao {
 
     Connection connection;
-
 
     public UserMySQLDao(Connection connection) {
         this.connection = connection;
@@ -46,7 +44,6 @@ public class UserMySQLDao implements UserDao {
         User u = new User(rs.getInt("id_user"), rs.getString("name"), rs.getString("pwd"),
                 rs.getString("surname"), rs.getString("username"), new City(rs.getInt("id_city"),
                 rs.getString("city_name"), new Country(rs.getInt("id_country"), rs.getString("country_name"))));
-        addToCache(u);
         return u;
     }
 
@@ -69,7 +66,6 @@ public class UserMySQLDao implements UserDao {
             if (rs != null && rs.next()) {
                 value.setUserId(rs.getInt(1));
             }
-            addToCache(value);
         } catch (SQLException e) {
             if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) { //Parametrizar
                 throw new UserAlreadyExistsException();
@@ -90,8 +86,6 @@ public class UserMySQLDao implements UserDao {
             ps.setInt(3, value.getCity().getCityId());
             ps.setString(4, value.getPassword());
             Integer rowsAffected = ps.executeUpdate();
-            removeFromCache(value.getUserId());
-            addToCache(value);
             return rowsAffected;
         } catch (SQLException sqlException) {
             throw new RuntimeException("Error al modificar usuario", sqlException);
@@ -106,7 +100,6 @@ public class UserMySQLDao implements UserDao {
             PreparedStatement ps = connection.prepareStatement(REMOVE_USER_QUERY);
             ps.setInt(1, id);
             Integer rowsAffected = ps.executeUpdate();
-            removeFromCache(id);
             return rowsAffected;
         } catch (SQLException e) {
             throw new RuntimeException("Error al eliminar usuario", e);
@@ -120,8 +113,8 @@ public class UserMySQLDao implements UserDao {
 
     @Override
     public User getById(Integer id) {
-        User user = getFromCache(id);
-        if (user!=null) return user;
+        User user = null;
+
         try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_USER_QUERY);
             ps.setInt(1, id);
@@ -154,18 +147,4 @@ public class UserMySQLDao implements UserDao {
             throw new RuntimeException("Error al obtener la lista de usuarios", e);
         }
     }
-
-    private void addToCache(User u) {
-        CacheFactory.getUserCache().put(u.getUserId(), u);
-    }
-
-    private User getFromCache(Integer userId) {
-        return CacheFactory.getUserCache().get(userId);
-    }
-
-    private void removeFromCache(Integer userId) {
-        CacheFactory.getUserCache().remove(userId);
-    }
-
-
 }
