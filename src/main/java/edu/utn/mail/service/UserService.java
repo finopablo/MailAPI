@@ -4,14 +4,19 @@ import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
 import edu.utn.mail.exceptions.UserNotexistException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserService {
 
     UserDao dao;
 
-    public UserService(UserDao dao) {
+    @Autowired
+    public UserService(@Qualifier("userMySqlDao") UserDao dao) {
         this.dao = dao;
     }
 

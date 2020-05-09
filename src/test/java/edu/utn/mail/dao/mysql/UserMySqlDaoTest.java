@@ -31,15 +31,12 @@ public class UserMySqlDaoTest {
     @Mock
     ResultSet rs;
 
-    @Mock
-    DriverManagerDataSource driverManagerDataSource;
 
 
     @Before
     public void setUp() throws SQLException {
         initMocks(this);
-        when (driverManagerDataSource.getConnection()).thenReturn(connection);
-        dao = new UserMySQLDao(driverManagerDataSource);
+        dao = new UserMySQLDao(connection);
     }
 
     @Test

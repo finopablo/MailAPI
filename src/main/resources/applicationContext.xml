@@ -7,6 +7,8 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder location="classpath:app.properties"/>
+    <context:component-scan base-package="edu.utn.mail" />
+
     <!--EJEMPLO PARA DAO EN MEMORY-->
     <bean id="city1" class="edu.utn.mail.domain.City">
         <property name="cityId" value="1"/>

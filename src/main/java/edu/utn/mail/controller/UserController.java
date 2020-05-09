@@ -5,13 +5,17 @@ import edu.utn.mail.exceptions.UserAlreadyExistsException;
 import edu.utn.mail.exceptions.UserNotexistException;
 import edu.utn.mail.exceptions.ValidationException;
 import edu.utn.mail.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Controller
 public class UserController {
+
     UserService userService;
 
-
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }

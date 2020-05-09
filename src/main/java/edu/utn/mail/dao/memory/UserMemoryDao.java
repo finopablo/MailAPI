@@ -4,6 +4,9 @@ import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.City;
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,17 +14,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Repository
+@Qualifier("userMemoryDao")
 public class UserMemoryDao implements UserDao {
 
 
     static int count = 0;
     List<User> userList;
 
+
     public UserMemoryDao() {
         userList = new ArrayList<>();
     }
 
-    public UserMemoryDao(List<User> userList) {
+    @Autowired
+    public UserMemoryDao(@Qualifier("defaultUserList") List<User> userList) {
         this.userList = userList;
     }
 

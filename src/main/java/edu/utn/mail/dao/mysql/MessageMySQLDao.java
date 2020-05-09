@@ -4,7 +4,10 @@ import edu.utn.mail.dao.MessageDao;
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.Message;
 import edu.utn.mail.exceptions.RecordExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,15 +19,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public class MessageMySQLDao implements MessageDao {
 
     Connection connection;
 
     UserDao userDao;
 
-
-    public MessageMySQLDao(DriverManagerDataSource dataSource, UserDao userDao) throws SQLException {
-        connection = dataSource.getConnection();
+    @Autowired
+    public MessageMySQLDao(Connection connection, @Qualifier("userMySqlDao") UserDao userDao) throws SQLException {
+        this.connection = connection;
         this.userDao = userDao;
     }
 

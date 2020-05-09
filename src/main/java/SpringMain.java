@@ -15,7 +15,7 @@ public class SpringMain {
     public static void main(String args[]) {
         User u = new User("jose", "juanperez", "1234", "perez", new City(1, "Buenos Aires", new Country(1, "Argentina")));
         try {
-            ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+            ApplicationContext context = new ClassPathXmlApplicationContext("annotationContext.xml");
             UserController userController = context.getBean("userController", UserController.class);
             User u2 = userController.login("juanperez", "1234");
             User u3 = userController.getUserById(1);
