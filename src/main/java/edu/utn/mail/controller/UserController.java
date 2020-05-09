@@ -5,11 +5,15 @@ import edu.utn.mail.exceptions.UserAlreadyExistsException;
 import edu.utn.mail.exceptions.UserNotexistException;
 import edu.utn.mail.exceptions.ValidationException;
 import edu.utn.mail.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 public class UserController {
     UserService userService;
+
+    static Logger logger = LogManager.getLogger(UserController.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -17,6 +21,7 @@ public class UserController {
 
     public User login(String username, String password) throws UserNotexistException, ValidationException {
         if ((username != null) && (password != null)) {
+            logger.info("Getting user for {}" , username);
             return userService.login(username, password);
         } else {
             throw new ValidationException();
@@ -36,6 +41,13 @@ public class UserController {
     public void removeUser(User user) throws UserNotexistException {
         userService.removeUser(user);
     }
+
+    public void removeUsers(List<User> userList) throws UserNotexistException {
+        for (User u : userList) {
+            userService.removeUser(u);
+        }
+    }
+
 
 
     public void updateUser(User user) throws UserNotexistException {

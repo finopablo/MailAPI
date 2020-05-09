@@ -10,15 +10,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
     <!-- *******************************
      ***** CACHE CONFIGURATION *****
      ******************************* -->
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="ehcache"/>
-    </bean>
-
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:ehcache.xml"/>
-        <property name="shared" value="true"/>
-    </bean>
-
     <context:property-placeholder location="classpath:app.properties"/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -31,7 +22,6 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 
     <bean id="userDao" class="edu.utn.mail.dao.mysql.UserMySQLDao">
         <constructor-arg ref="dataSource"/>
-        <constructor-arg ref="cacheManager"/>
     </bean>
 
     <bean id="messageDao" class="edu.utn.mail.dao.mysql.MessageMySQLDao">

@@ -1,51 +1,91 @@
 package edu.utn.mail.controller;
 
-import edu.utn.mail.domain.City;
-import edu.utn.mail.domain.Country;
+
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserNotexistException;
 import edu.utn.mail.exceptions.ValidationException;
 import edu.utn.mail.service.UserService;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 
 public class UserControllerTest {
 
-    UserService userService;
     UserController userController;
+    UserService service;
+
+
+    @Before
+    public void setUp() {
+        service = mock(UserService.class);
+        userController = new UserController(service);
+    }
 
     @Test
-    public void testLoginOk() {
-        try {
-            userService = mock(UserService.class);
-            userController = new UserController(userService);
-            when(userService.login("username", "password")).thenReturn(new User(1, "nombre", "username", "passord", "surname", new City(1, "Buenos Aires", new Country(1, "Argentina"))));
-            User user = userController.login("username", "password");
-            assertEquals(user.getUserId(), Integer.valueOf(1));
-            assertEquals(user.getUsername(), "username");
-            verify(userService, times(1)).login("username", "password");
-        } catch (ValidationException e) {
-            fail();
-        } catch (UserNotexistException e) {
-            fail();
-        }
+    public void testLoginOk() throws UserNotexistException, ValidationException {
+        User loggedUser = new User(1, "Nombre", "username", "", "Surname", null);
+        //Cuando llame al mock service.login devuelvo el logged user
+        when(service.login("user", "pwd")).thenReturn(loggedUser);
+        User returnedUser = userController.login("user", "pwd");
+
+        //Hacemos los assert
+        assertEquals(loggedUser.getUserId(), returnedUser.getUserId());
+        assertEquals(loggedUser.getUsername(), returnedUser.getUsername());
+        verify(service, times(1)).login("user", "pwd");
     }
 
     @Test(expected = UserNotexistException.class)
-    public void testLoginUserNotFound() throws ValidationException, UserNotexistException {
-        userService = mock(UserService.class);
-        userController = new UserController(userService);
-        when(userService.login("username", "password")).thenThrow(new UserNotexistException());
-        User user = userController.login("username", "password");
+    public void testLoginUserNotFound() throws UserNotexistException, ValidationException {
+        when(service.login("user", "pwd")).thenThrow(new UserNotexistException());
+        userController.login("user", "pwd");
     }
 
     @Test(expected = ValidationException.class)
-    public void testValidationException() throws ValidationException, UserNotexistException {
-        userController = new UserController(userService);
-        User user = userController.login(null, null);
+    public void testLoginInvalidData() throws UserNotexistException, ValidationException {
+        userController.login(null, "pwd");
     }
+
+    @Test
+    public void testRemoveUserOk() throws UserNotexistException {
+        User userToRemove = new User(1, "Nombre", "username", "", "Surname", null);
+        doNothing().when(service).removeUser(userToRemove);
+        userController.removeUser(userToRemove);
+        verify(service, times(1)).removeUser(userToRemove);
+    }
+
+    @Test
+    public void testRemoveUsersOk() throws UserNotexistException {
+        List<User> usersToRemove = new ArrayList<>();
+
+        usersToRemove.add(new User(1, "Nombre", "username", "", "Surname", null));
+        usersToRemove.add(new User(2, "Nombre", "username", "", "Surname", null));
+        usersToRemove.add(new User(3, "Nombre", "username", "", "Surname", null));
+        doNothing().when(service).removeUser(any());
+        userController.removeUsers(usersToRemove);
+        verify(service, times(usersToRemove.size())).removeUser(any());
+    }
+
+
+    /*TAREA PARA EL HOGAR : Verificar que falle y que uno de los usuarios no exista , el primero y el segundo existen
+    * y el tercero no .
+    * */
+    @Test
+    public void testRemoveUsersUserNotExists() throws UserNotexistException {
+        List<User> usersToRemove = new ArrayList<>();
+        usersToRemove.add(new User(1, "Nombre", "username", "", "Surname", null));
+        usersToRemove.add(new User(2, "Nombre", "username", "", "Surname", null));
+        usersToRemove.add(new User(3, "Nombre", "username", "", "Surname", null));
+        doNothing().when(service).removeUser(any());
+        userController.removeUsers(usersToRemove);
+        verify(service, times(usersToRemove.size())).removeUser(any());
+    }
+
+
 }
