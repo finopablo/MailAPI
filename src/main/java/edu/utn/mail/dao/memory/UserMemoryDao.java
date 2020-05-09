@@ -21,10 +21,14 @@ public class UserMemoryDao implements UserDao {
         userList = new ArrayList<>();
     }
 
+    public UserMemoryDao(List<User> userList) {
+        this.userList = userList;
+    }
+
     @Override
     public User getByUsername(String username, String password) {
         return userList.stream()
-                .filter(user -> user.equals(username) && user.equals(password))
+                .filter(user -> (username.equals(user.getUsername())) && password.equals(user.getPassword()))
                 .findFirst()
                 .orElse(null);
     }

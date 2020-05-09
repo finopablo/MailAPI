@@ -19,15 +19,10 @@ public class SpringMain {
             UserController userController = context.getBean("userController", UserController.class);
             User u2 = userController.login("juanperez", "1234");
             User u3 = userController.getUserById(1);
-
         } catch (UserNotexistException userNotExist) {
             userNotExist.printStackTrace();
         } catch (ValidationException validationException) {
             validationException.printStackTrace();
-/*        } catch (UserAlreadyExistsException e) {
-            e.printStackTrace();
-        }*/
-
         }
     }
 }

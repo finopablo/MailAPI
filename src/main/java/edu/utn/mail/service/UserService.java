@@ -42,4 +42,5 @@ public class UserService {
     public User getUser(Integer userId){
         return dao.getById(userId);
     }
+
 }

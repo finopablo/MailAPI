@@ -19,7 +19,7 @@ public class UserMySQLDao implements UserDao {
     final Connection connection;
 
     public UserMySQLDao(DriverManagerDataSource dataSource) throws SQLException {
-        this.connection = dataSource.getConnection();
+        connection = dataSource.getConnection();
     }
 
     @Override

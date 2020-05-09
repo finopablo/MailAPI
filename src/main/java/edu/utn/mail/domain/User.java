@@ -11,6 +11,10 @@ public class User {
     String surname;
     City city;
 
+    public User(){
+
+    }
+
     public User(Integer userId, String name, String username, String password, String surname, City city) {
         this.userId = userId;
         this.name = name;

@@ -6,6 +6,10 @@ public class City {
     String name;
     Country country;
 
+
+    public City() {
+
+    }
     public City(Integer cityId, String name, Country country) {
         this.cityId = cityId;
         this.name = name;

@@ -24,7 +24,7 @@ public class MessageMySQLDao implements MessageDao {
 
 
     public MessageMySQLDao(DriverManagerDataSource dataSource, UserDao userDao) throws SQLException {
-        this.connection = dataSource.getConnection();
+        connection = dataSource.getConnection();
         this.userDao = userDao;
     }
 

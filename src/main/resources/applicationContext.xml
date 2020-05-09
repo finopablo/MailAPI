@@ -6,11 +6,49 @@ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
-
-    <!-- *******************************
-     ***** CACHE CONFIGURATION *****
-     ******************************* -->
     <context:property-placeholder location="classpath:app.properties"/>
+    <!--EJEMPLO PARA DAO EN MEMORY-->
+    <bean id="city1" class="edu.utn.mail.domain.City">
+        <property name="cityId" value="1"/>
+        <property name="name" value="Mar del Plata"/>
+        <property name="country" ref="country1"/>
+    </bean>
+
+    <bean id="country1" class="edu.utn.mail.domain.Country">
+        <property name="countryId" value="1"/>
+        <property name="country" value="Argentina"/>
+    </bean>
+
+
+    <bean id="user2" class="edu.utn.mail.domain.User">
+        <property name="userId" value="2"></property>
+        <property name="name" value="Juan"></property>
+        <property name="username" value="juanperez"></property>
+        <property name="password" value="1234"></property>
+        <property name="surname" value="Perez"></property>
+        <property name="city" ref="city1"></property>
+    </bean>
+
+
+    <bean id="user1" class="edu.utn.mail.domain.User">
+        <property name="userId" value="1"></property>
+        <property name="name" value="Jose"></property>
+        <property name="username" value="joseperez"></property>
+        <property name="password" value="1234"></property>
+        <property name="surname" value="Perez"></property>
+        <property name="city" ref="city1"></property>
+    </bean>
+
+    <bean id="memoryDB" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <ref bean="user1" />
+                <ref bean="user2" />
+            </list>
+        </constructor-arg>
+    </bean>
+    <!--FIN EJEMPLO DAO EN MEMORIA-->
+
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${db.driver}"/>
@@ -19,18 +57,21 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <property name="password" value="${db.password}"/>
     </bean>
 
-
-    <bean id="userDao" class="edu.utn.mail.dao.mysql.UserMySQLDao">
+    <bean id="userMySqlDao" class="edu.utn.mail.dao.mysql.UserMySQLDao">
         <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="userMemoryDao" class="edu.utn.mail.dao.memory.UserMemoryDao">
+        <constructor-arg ref="memoryDB"/>
     </bean>
 
     <bean id="messageDao" class="edu.utn.mail.dao.mysql.MessageMySQLDao">
         <constructor-arg index="0" ref="dataSource"/>
-        <constructor-arg index="1" ref="userDao"/>
+        <constructor-arg index="1" ref="userMySqlDao"/>
     </bean>
 
     <bean id="userService" class="edu.utn.mail.service.UserService">
-        <constructor-arg index="0" ref="userDao"/>
+        <constructor-arg index="0" ref="userMySqlDao"/>
     </bean>
 
     <bean id="messageService" class="edu.utn.mail.service.MessageService">
