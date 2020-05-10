@@ -8,7 +8,6 @@ import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -18,7 +17,7 @@ import java.util.List;
 import static edu.utn.mail.dao.mysql.MySQLUtils.*;
 
 @Repository
-@Qualifier("userMysqlDao")
+@Qualifier("userMySqlDao")
 public class UserMySQLDao implements UserDao {
 
     final Connection connection;

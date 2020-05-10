@@ -1,15 +1,14 @@
 package edu.utn.mail.dao.mysql;
 
-import edu.utn.mail.domain.City;
-import edu.utn.mail.domain.Country;
 import edu.utn.mail.domain.User;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static edu.utn.mail.dao.mysql.MySQLUtils.GET_BY_USERNAME_USER_QUERY;
 import static org.junit.Assert.assertEquals;
