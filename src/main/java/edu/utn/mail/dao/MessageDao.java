@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface MessageDao extends AbstractDao<Message> {
     List<Message> getByUser(Integer userId);
-
     List<Message> getbyUserAndDates(Integer userId, Date from, Date to);
 }

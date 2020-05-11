@@ -24,7 +24,7 @@ public class UserController {
         if ((username != null) && (password != null)) {
             return userService.login(username, password);
         } else {
-            throw new ValidationException();
+            throw new ValidationException("username and password must have a value");
         }
     }
 

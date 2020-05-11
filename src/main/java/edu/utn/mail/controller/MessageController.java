@@ -2,6 +2,7 @@ package edu.utn.mail.controller;
 
 import edu.utn.mail.domain.Message;
 import edu.utn.mail.domain.User;
+import edu.utn.mail.exceptions.UserNotexistException;
 import edu.utn.mail.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,5 +22,10 @@ public class MessageController {
     public List<Message> getMessages(Integer userId) {
             return messageService.getMessagesByUser(userId);
         }
+
+
+    public Message newMessage(Message message) throws UserNotexistException {
+         return messageService.newMessage(message);
+    }
 
 }

@@ -8,16 +8,16 @@ public class Message {
     long messageId;
     User from;
     User to;
-    String message;
+    String subject;
     String body;
     LocalDateTime messageDate;
 
 
-    public Message(long messageId, User from, User to, String message, String body, LocalDateTime messageDate) {
+    public Message(long messageId, User from, User to, String subject, String body, LocalDateTime messageDate) {
         this.messageId = messageId;
         this.from = from;
         this.to = to;
-        this.message = message;
+        this.subject = subject;
         this.body = body;
         this.messageDate = messageDate;
     }
@@ -34,8 +34,8 @@ public class Message {
         return to;
     }
 
-    public String getMessage() {
-        return message;
+    public String getSubject() {
+        return subject;
     }
 
     public String getBody() {
@@ -58,8 +58,8 @@ public class Message {
         this.to = to;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setSubject(String message) {
+        this.subject = message;
     }
 
     public void setBody(String body) {
