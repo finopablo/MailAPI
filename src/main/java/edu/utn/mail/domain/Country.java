@@ -7,7 +7,9 @@ public class Country {
     Integer countryId;
     String country;
 
+    public Country() {
 
+    }
     public Country(Integer countryId, String country) {
         this.countryId = countryId;
         this.country = country;

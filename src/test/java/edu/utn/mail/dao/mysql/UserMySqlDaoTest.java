@@ -1,9 +1,6 @@
 package edu.utn.mail.dao.mysql;
 
-import edu.utn.mail.domain.City;
-import edu.utn.mail.domain.Country;
 import edu.utn.mail.domain.User;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,8 +30,10 @@ public class UserMySqlDaoTest {
     @Mock
     ResultSet rs;
 
+
+
     @Before
-    public void setUp() {
+    public void setUp() throws SQLException {
         initMocks(this);
         dao = new UserMySQLDao(connection);
     }

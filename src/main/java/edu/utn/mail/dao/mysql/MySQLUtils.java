@@ -19,4 +19,5 @@ public class MySQLUtils {
 
 
     protected static final String GET_MESSAGES_BY_USER = BASE_MESSAGE_QUERY + " where id_to = ?";
+    protected static final String ADD_MESSAGE_QUERY = "insert into messages(id_from, id_to, body, subject, message_date) values (?,?,?,?, now())";
 }

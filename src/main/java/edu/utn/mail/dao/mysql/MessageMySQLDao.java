@@ -4,25 +4,26 @@ import edu.utn.mail.dao.MessageDao;
 import edu.utn.mail.dao.UserDao;
 import edu.utn.mail.domain.Message;
 import edu.utn.mail.exceptions.RecordExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public class MessageMySQLDao implements MessageDao {
 
     Connection connection;
 
     UserDao userDao;
 
-    public MessageMySQLDao(Connection con, UserDao userDao) {
-        this.connection = con;
+    @Autowired
+    public MessageMySQLDao(Connection connection, @Qualifier("userMySqlDao") UserDao userDao) throws SQLException {
+        this.connection = connection;
         this.userDao = userDao;
     }
 
@@ -56,8 +57,22 @@ public class MessageMySQLDao implements MessageDao {
     }
 
     @Override
-    public Message add(Message value) throws RecordExistsException {
-        return null;
+    public Message add(Message value) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(MySQLUtils.ADD_MESSAGE_QUERY, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, value.getFrom().getUserId());
+            ps.setInt(2, value.getTo().getUserId());
+            ps.setString(3, value.getSubject());
+            ps.setString(4, value.getBody());
+            ps.execute();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                value.setMessageId(rs.getInt(1));
+            }
+            return value;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

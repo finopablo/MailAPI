@@ -6,6 +6,9 @@ import edu.utn.mail.domain.City;
 import edu.utn.mail.domain.Country;
 import edu.utn.mail.domain.User;
 import edu.utn.mail.exceptions.UserAlreadyExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,11 +16,14 @@ import java.util.List;
 
 import static edu.utn.mail.dao.mysql.MySQLUtils.*;
 
+@Repository
+@Qualifier("userMySqlDao")
 public class UserMySQLDao implements UserDao {
 
-    Connection connection;
+    final Connection connection;
 
-    public UserMySQLDao(Connection connection) {
+    @Autowired
+    public UserMySQLDao(Connection connection) throws SQLException {
         this.connection = connection;
     }
 
@@ -114,12 +120,10 @@ public class UserMySQLDao implements UserDao {
     @Override
     public User getById(Integer id) {
         User user = null;
-
         try {
             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_USER_QUERY);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 user = createUser(rs);
             }
