@@ -1,15 +1,23 @@
 package edu.utn.mail.domain;
 
 
+import javax.persistence.*;
 
+@Entity
+@Table(name="countries")
 public class Country {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_country")
     Integer countryId;
+    @Column(name="country_name")
     String country;
 
     public Country() {
 
     }
+
     public Country(Integer countryId, String country) {
         this.countryId = countryId;
         this.country = country;

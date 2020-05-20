@@ -16,7 +16,7 @@ public class UserService {
     UserDao dao;
 
     @Autowired
-    public UserService(@Qualifier("userMySqlDao") UserDao dao) {
+    public UserService(UserDao dao) {
         this.dao = dao;
     }
 
@@ -26,26 +26,20 @@ public class UserService {
     }
 
     public User createUser(User user) throws UserAlreadyExistsException {
-        return dao.add(user);
+        return dao.save(user);
     }
 
-    
+
     public void removeUser(User user) throws UserNotexistException {
-        if (dao.remove(user) == 0) {
-            throw new UserNotexistException();
-        }
+        dao.delete(user);
     }
 
     public User updateUser(User user) throws UserNotexistException {
-        if (dao.update(user) > 0) {
-            return user;
-        } else {
-            throw new UserNotexistException();
-        }
+     return dao.save(user);
     }
 
     public User getUser(Integer userId){
-        return dao.getById(userId);
+        return dao.getOne(userId);
     }
 
 }

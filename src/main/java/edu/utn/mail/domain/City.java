@@ -1,15 +1,27 @@
 package edu.utn.mail.domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="cities")
 public class City {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_city")
     Integer cityId;
+    @Column(name="city_name")
     String name;
+
+    @ManyToOne
+    @JoinColumn(name = "id_country")
     Country country;
 
 
     public City() {
 
     }
+
     public City(Integer cityId, String name, Country country) {
         this.cityId = cityId;
         this.name = name;

@@ -8,6 +8,8 @@ import edu.utn.mail.exceptions.UserNotexistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -24,21 +26,21 @@ public class MessageService {
         this.userService = userService;
     }
 
-    public List<Message> getMessagesByUser(Integer userId) {
-        return messageDao.getByUser(userId);
+    public List<Message> getMessagesByUser(User user) {
+        return messageDao.getByUser(user);
     }
 
-    public List<Message> getMessagesByUserFilterByDate(Integer userId, Date from, Date to) {
-        return messageDao.getbyUserAndDates(userId, from, to);
+    public List<Message> getMessagesByUserFilterByDate(User user, Date from, Date to) {
+        return messageDao.getByUser(user, LocalDateTime.ofInstant(from.toInstant(),
+                ZoneId.systemDefault()), LocalDateTime.ofInstant(to.toInstant(),
+                ZoneId.systemDefault()));
     }
 
     public Message newMessage(Message message) throws UserNotexistException {
-        try {
-            User userTo =  userService.getUser(message.getTo().getUserId());
-            return messageDao.add(message);
-        } catch (RecordExistsException e) {
-            //Is not possible to have this situation
-        }
-        return null;
+        User userTo = userService.getUser(message.getTo().getUserId());
+        return messageDao.save(message);
+    }
+    public Message getMessageById(Integer messageId) {
+        return messageDao.findById(messageId).orElse(null);
     }
 }

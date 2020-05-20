@@ -1,17 +1,36 @@
 package edu.utn.mail.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_user")
     Integer userId;
+
     String name;
-    String username;
-    String password;
     String surname;
+
+
+    @JsonIgnore
+    @Column(name = "pwd")
+    String password;
+
+    String username;
+
+    @ManyToOne
+    @JoinColumn(name = "id_city")
     City city;
 
-    public User(){
+    public User() {
 
     }
 
@@ -24,7 +43,7 @@ public class User {
         this.city = city;
     }
 
-    public User( String name, String username, String password, String surname, City city) {
+    public User(String name, String username, String password, String surname, City city) {
         this.name = name;
         this.username = username;
         this.password = password;

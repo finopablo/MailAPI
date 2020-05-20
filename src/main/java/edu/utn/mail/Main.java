@@ -23,37 +23,5 @@ import java.util.Properties;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        // 1) Connection
 
-        Properties config = new Properties();
-        config.load(new FileInputStream("./conf/app.properties"));
-//        AbstractDaoFactory daoFactory =  (AbstractDaoFactory) Class.forName(config.getProperty("db.dao.factory")).getDeclaredConstructor(Properties.class).newInstance(config);
-
-
-        //      MessageDao messageDao = daoFactory.getMessageDao();
-        //     MessageService messageService = new MessageService(messageDao);
-        //      MessageController messageController = new MessageController(messageService);
-
-
-        //     List<Message> messageList = messageController.getMessages(1);
-
-
-        //    UserDao userDao = daoFactory.getUserDao();
-//        UserService userService = new UserService(userDao);
-        //      UserController userController = new UserController(userService);
- /*       User u = new User("jose", "juanperez", "1234", "perez", new City(1, "Buenos Aires", new Country(1, "Argentina")));
-        try {
-            u = userController.createUser(u);
-            System.out.println(u);
-            User u2 = userController.login("assass", "asss");
-        } catch (UserNotexistException userNotExist) {
-            userNotExist.printStackTrace();
-        }catch(UserAlreadyExistsException userExists) {
-            userExists.printStackTrace();
-        } catch(ValidationException validationException) {
-            validationException.printStackTrace();;
-        }
-    }*/
-    }
 }
