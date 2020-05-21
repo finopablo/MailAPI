@@ -53,8 +53,9 @@ public class MessageWebController {
     @GetMapping("/{id}")
     public ResponseEntity<Message> getMessage(@RequestHeader("Authorization") String sessionToken, @PathVariable("id") Integer messageId) throws UserNotexistException {
         User currentUser = getCurrentUser(sessionToken);
-        
+
         Message message = messageController.getMessage(messageId);
+
         ResponseEntity<Message> responseEntity;
         if (message != null) {
             if ((message.getFrom().getUserId() == currentUser.getUserId()) || (message.getTo().getUserId() == currentUser.getUserId())) {
@@ -77,7 +78,7 @@ public class MessageWebController {
 
     }
 
-    private User getCurrentUser(String sessionToken) throws  UserNotexistException {
+    private User getCurrentUser(String sessionToken) throws UserNotexistException {
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotexistException::new);
     }
 }
