@@ -37,11 +37,7 @@ public class MessageWebController {
 
     @GetMapping
     public ResponseEntity<List<Message>> getMessages(@RequestHeader("Authorization") String sessionToken, @RequestParam(value = "from", required = false) String from, @RequestParam(value = "to", required = false) String to) throws ParseException, UserNotexistException {
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if (currentUser == null) {
-            throw new UserNotexistException();
-        }
-
+        User currentUser = getCurrentUser(sessionToken);
         List<Message> messages = new ArrayList<>();
         if ((from != null) && (to != null)) {
             Date fromDate = new SimpleDateFormat("dd/MM/yyyy").parse(from);
@@ -53,12 +49,11 @@ public class MessageWebController {
         return (messages.size() > 0) ? ResponseEntity.ok(messages) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<Message> getMessage(@RequestHeader("Authorization") String sessionToken, @PathVariable("id") Integer messageId) throws UserNotexistException {
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if (currentUser == null) {
-            throw new UserNotexistException();
-        }
+        User currentUser = getCurrentUser(sessionToken);
+        
         Message message = messageController.getMessage(messageId);
         ResponseEntity<Message> responseEntity;
         if (message != null) {
@@ -76,9 +71,13 @@ public class MessageWebController {
 
     @PostMapping("/")
     public ResponseEntity newMessage(@RequestHeader("Authorization") String sessionToken, @RequestBody Message message) throws UserNotexistException {
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
+        User currentUser = getCurrentUser(sessionToken);
         message.setFrom(currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(messageController.newMessage(message));
 
+    }
+
+    private User getCurrentUser(String sessionToken) throws  UserNotexistException {
+        return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotexistException::new);
     }
 }
