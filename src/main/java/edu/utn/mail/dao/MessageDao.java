@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-public interface MessageDao extends JpaRepository<Message, Integer> {
+public interface MessageDao extends JpaRepository<Message, Long> {
 
     @Query(value = "SELECT m FROM Message m WHERE m.to = :user")
     List<Message> getByUser(@Param("user") User user);

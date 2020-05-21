@@ -51,7 +51,7 @@ public class MessageWebController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Message> getMessage(@RequestHeader("Authorization") String sessionToken, @PathVariable("id") Integer messageId) throws UserNotexistException {
+    public ResponseEntity<Message> getMessage(@RequestHeader("Authorization") String sessionToken, @PathVariable("id") Long messageId) throws UserNotexistException {
         User currentUser = getCurrentUser(sessionToken);
 
         Message message = messageController.getMessage(messageId);

@@ -35,7 +35,7 @@ public class MessageController {
         return messageService.newMessage(message);
     }
 
-    public Message getMessage(Integer messageId) {
+    public Message getMessage(Long messageId) {
         return messageService.getMessageById(messageId);
     }
 }

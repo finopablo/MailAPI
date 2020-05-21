@@ -40,7 +40,7 @@ public class MessageService {
         User userTo = userService.getUser(message.getTo().getUserId());
         return messageDao.save(message);
     }
-    public Message getMessageById(Integer messageId) {
+    public Message getMessageById(Long messageId) {
         return messageDao.findById(messageId).orElse(null);
     }
 }
