@@ -1,13 +1,17 @@
 package edu.utn.mail.domain;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="cities")
-public class City {
+public class City implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_city")
     Integer cityId;
     @Column(name="city_name")
@@ -15,6 +19,7 @@ public class City {
 
     @ManyToOne
     @JoinColumn(name = "id_country")
+    @Fetch(FetchMode.JOIN)
     Country country;
 
 

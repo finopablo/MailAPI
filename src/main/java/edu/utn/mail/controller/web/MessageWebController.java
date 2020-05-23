@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.swing.text.html.Option;
 import javax.websocket.server.PathParam;
+import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class MessageWebController {
 
         ResponseEntity<Message> responseEntity;
         if (message != null) {
-            if ((message.getFrom().getUserId() == currentUser.getUserId()) || (message.getTo().getUserId() == currentUser.getUserId())) {
+            if ((message.getFrom().getUserId().equals(currentUser.getUserId()) || (message.getTo().getUserId().equals(currentUser.getUserId())))) {
                 responseEntity = ResponseEntity.ok(message);
             } else {
                 throw new UserNotexistException();
@@ -70,15 +72,23 @@ public class MessageWebController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity newMessage(@RequestHeader("Authorization") String sessionToken, @RequestBody Message message) throws UserNotexistException {
         User currentUser = getCurrentUser(sessionToken);
         message.setFrom(currentUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(messageController.newMessage(message));
-
+        Message newMessage = messageController.newMessage(message);
+        return ResponseEntity.created(getLocation(newMessage)).build();
     }
 
     private User getCurrentUser(String sessionToken) throws UserNotexistException {
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotexistException::new);
+    }
+
+    private URI getLocation(Message message) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(message.getMessageId())
+                .toUri();
     }
 }

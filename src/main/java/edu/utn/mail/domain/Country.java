@@ -2,13 +2,14 @@ package edu.utn.mail.domain;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="countries")
-public class Country {
+public class Country implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_country")
     Integer countryId;
     @Column(name="country_name")

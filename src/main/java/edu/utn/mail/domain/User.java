@@ -1,18 +1,20 @@
 package edu.utn.mail.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
     Integer userId;
 
@@ -28,6 +30,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "id_city")
+    @Fetch(FetchMode.JOIN)
     City city;
 
     public User() {

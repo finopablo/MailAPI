@@ -25,10 +25,9 @@ public class MessageController {
         return messageService.getMessagesByUser(user);
     }
 
-    public List<Message> getMessagesByDate(User user, Date from , Date to) {
-        return messageService.getMessagesByUserFilterByDate(user, from , to);
+    public List<Message> getMessagesByDate(User user, Date from, Date to) {
+        return messageService.getMessagesByUserFilterByDate(user, from, to);
     }
-
 
 
     public Message newMessage(Message message) throws UserNotexistException {

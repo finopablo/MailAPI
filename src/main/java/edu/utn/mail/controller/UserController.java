@@ -49,7 +49,6 @@ public class UserController {
     }
 
 
-
     public void updateUser(User user) throws UserNotexistException {
         userService.updateUser(user);
     }
