@@ -34,7 +34,7 @@ public class SessionManager {
         if (token == null) {
             return null;
         }
-        Session session = Optional.of(sessionMap.get(token)).orElse(null);
+        Session session = sessionMap.get(token);
         if (session != null) {
             session.setLastAction(new Date(System.currentTimeMillis()));
         }
